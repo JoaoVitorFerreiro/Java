@@ -1,0 +1,253 @@
+<!-- register.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro</title>
+    <style>
+      :root {
+        --primary: #6c63ff;
+        --secondary-bg: #f0f2f5;
+        --card-bg: #ffffff;
+        --text-color: #333333;
+        --error-color: #e74c3c;
+        --radius: 8px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body,
+      html {
+        height: 100%;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background-color: var(--secondary-bg);
+      }
+      .login-container {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+      }
+      .login-card {
+        width: 800px;
+        max-width: 90%;
+        height: 500px;
+        background-color: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: flex;
+        overflow: hidden;
+      }
+      .login-image {
+        flex: 1;
+        background: url("login-image.jpg") center/cover no-repeat;
+      }
+      .login-form {
+        flex: 1;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .login-form h2 {
+        margin-bottom: 24px;
+        color: var(--text-color);
+        text-align: center;
+      }
+      .form-group {
+        position: relative;
+        margin-bottom: 20px;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 12px 40px 12px 12px;
+        border: 1px solid #ccc;
+        border-radius: var(--radius);
+        font-size: 16px;
+      }
+      .form-group .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        color: #666;
+      }
+      .form-group .error {
+        color: var(--error-color);
+        font-size: 14px;
+        margin-top: 4px;
+        display: none;
+      }
+      .btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius);
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn:hover {
+        background: #5a54d1;
+      }
+      .toggle-link {
+        margin-top: 16px;
+        text-align: center;
+        font-size: 14px;
+      }
+      .toggle-link button {
+        background: none;
+        border: none;
+        color: var(--primary);
+        cursor: pointer;
+        font-weight: bold;
+      }
+      @media (max-width: 768px) {
+        .login-card {
+          flex-direction: column;
+          height: auto;
+        }
+        .login-image {
+          height: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-form">
+          <h2>Criar nova conta</h2>
+          <form id="register-form" novalidate>
+            <div class="form-group">
+              <input
+                type="text"
+                id="name"
+                placeholder="Nome completo"
+                required
+                minlength="3"
+              />
+              <button type="button" class="toggle-password" data-target="name">
+                👤
+              </button>
+              <p class="error">Nome deve ter ao menos 3 caracteres.</p>
+            </div>
+            <div class="form-group">
+              <input type="email" id="email" placeholder="Email" required />
+              <button type="button" class="toggle-password" data-target="email">
+                ✉️
+              </button>
+              <p class="error">Por favor, insira um email válido.</p>
+            </div>
+            <div class="form-group">
+              <input
+                type="password"
+                id="password"
+                placeholder="Senha"
+                required
+                minlength="6"
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                data-target="password"
+              >
+                Mostrar
+              </button>
+              <p class="error">Senha deve ter ao menos 6 caracteres.</p>
+            </div>
+            <button type="submit" class="btn">Criar conta</button>
+          </form>
+          <div class="toggle-link">
+            Já tem uma conta?
+            <button id="to-login">Faça login</button>
+          </div>
+        </div>
+        <div class="login-image"></div>
+      </div>
+    </div>
+
+    <script>
+      // toggle senha
+      document.querySelectorAll(".toggle-password").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const tgt = btn.dataset.target;
+          const inp = document.getElementById(tgt);
+          if (!inp) return;
+          if (inp.type === "password") {
+            inp.type = "text";
+            btn.textContent = tgt === "password" ? "Ocultar" : btn.textContent;
+          } else {
+            inp.type = "password";
+            btn.textContent = tgt === "password" ? "Mostrar" : btn.textContent;
+          }
+        });
+      });
+
+      // volta ao login
+      document.getElementById("to-login").addEventListener("click", () => {
+        window.location.href = "login.html";
+      });
+
+      // submit cadastro
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          document
+            .querySelectorAll(".form-group .error")
+            .forEach((el) => (el.style.display = "none"));
+
+          let valid = true;
+          const name = document.getElementById("name");
+          const email = document.getElementById("email");
+          const pwd = document.getElementById("password");
+
+          if (!name.checkValidity()) {
+            name.parentNode.querySelector(".error").style.display = "block";
+            valid = false;
+          }
+          if (!email.checkValidity()) {
+            email.parentNode.querySelector(".error").style.display = "block";
+            valid = false;
+          }
+          if (!pwd.checkValidity()) {
+            pwd.parentNode.querySelector(".error").style.display = "block";
+            valid = false;
+          }
+          if (!valid) return;
+
+          try {
+            const res = await fetch("/usuarios/criar", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                nome: name.value.trim(),
+                email: email.value.trim(),
+                senha: pwd.value,
+              }),
+            });
+
+            if (res.status === 201) {
+              alert("Conta criada com sucesso!");
+              window.location.href = "login.html";
+            } else {
+              const txt = await res.text();
+              alert(txt || "Erro no cadastro");
+            }
+          } catch {
+            alert("Erro de conexão. Tente novamente.");
+          }
+        });
+    </script>
+  </body>
+</html>
