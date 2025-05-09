@@ -2,6 +2,7 @@ package com.example.AulaTeste.controller;
 
 import java.util.List;
 
+import com.example.AulaTeste.service.EmailTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private EmailTestService emailTestService;
 
     @PostMapping("/criar")
     public ResponseEntity<?> criarUsuario(@RequestBody UserModel userModel) {
@@ -66,5 +70,18 @@ public class UsuarioController {
     public ResponseEntity<Void> deletUser(@RequestParam String email) {
         usuarioService.deletarPorEmail(email);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/teste-email")
+    public ResponseEntity<String> testarEmail() {
+        try {
+            System.out.println("Iniciando teste de email...");
+            emailTestService.testarEnvioEmail();
+            return ResponseEntity.ok("Email de teste enviado com sucesso!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao enviar email: " + e.getMessage());
+        }
     }
 }

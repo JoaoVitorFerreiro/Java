@@ -8,5 +8,5 @@ import com.example.AulaTeste.model.UserModel;
 
 public interface IUserRepository extends JpaRepository<UserModel, UUID> {
   UserModel findByEmail(String email);
-  UserModel deleteByEmail(String email);
+  void deleteByEmail(String email);
 }

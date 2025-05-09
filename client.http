@@ -1,12 +1,16 @@
 # Buscar usuario
 GET http://localhost:8080/usuarios/todos
 
+
+### Teste email
+GET http://localhost:8080/usuarios/teste-email
+
 ###
-GET http://localhost:8080/usuarios/buscar?email=joao2@email.com
+GET http://localhost:8080/usuarios/buscar?email=jvferreiro1@gmail.com
 content-type: application/json 
 
 ###
-DELETE http://localhost:8080/usuarios/deletar?email=joao2@email.com
+DELETE http://localhost:8080/usuarios/deletar?email=jvferreiro1@gmail.com
 content-type: application/json 
 
 
@@ -15,9 +19,9 @@ POST http://localhost:8080/usuarios/criar
 content-type: application/json 
 
 {
-  "nome": "Joao233",
-  "email": "joao233@email.com",
-  "senha": "1234"
+  "nome": "Joao Vitor Ferreiro",
+  "email": "jvferreiro1@gmail.com",
+  "senha": "123456"
 }
 
 ###

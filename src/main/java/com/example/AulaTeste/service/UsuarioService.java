@@ -16,16 +16,31 @@ public class UsuarioService {
     @Autowired
     private IUserRepository usuarioRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public UserModel criarUsuario(UserModel userModel) {
         var userExistente = usuarioRepository.findByEmail(userModel.getEmail());
         if (userExistente != null) {
             throw new UsuarioJaExiste();
         }
 
-        String senhaCriptografada = BCrypt.withDefaults().hashToString(12, userModel.getSenha().toCharArray());
+        String senhaCriptografada = BCrypt.withDefaults()
+                .hashToString(12, userModel.getSenha().toCharArray());
         userModel.setSenha(senhaCriptografada);
 
-        return usuarioRepository.save(userModel);
+        UserModel usuarioCriado = usuarioRepository.save(userModel);
+
+        try {
+            emailService.enviarEmailBoasVindas(
+                    usuarioCriado.getEmail(),
+                    usuarioCriado.getNome()
+            );
+        } catch (Exception e) {
+            System.err.println("Erro ao enviar email: " + e.getMessage());
+        }
+
+        return usuarioCriado;
     }
 
     public List<UserModel> listarUsuarios() {
@@ -45,6 +60,10 @@ public class UsuarioService {
 
     @Transactional
     public void deletarPorEmail(String email) {
-        usuarioRepository.deleteByEmail(email);
+        UserModel usuario = usuarioRepository.findByEmail(email);
+        if (usuario == null) {
+            throw new RuntimeException("Usuário não encontrado");
+        }
+        usuarioRepository.delete(usuario);
     }
 }
